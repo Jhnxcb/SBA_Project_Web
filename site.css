@@ -71,7 +71,6 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
 }
 .site-nav a:hover { color: var(--sba-color-brand); text-decoration: none; }
 .site-nav a[aria-current] { color: var(--sba-color-brand); }
-.site-nav a.admissions-link { font-weight: 600; }
 .site-menu-button { display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border-radius: 0.5rem; cursor: pointer; }
 .site-menu-button:hover { background: #e6effc; }
 
@@ -279,8 +278,9 @@ textarea.site-input { resize: vertical; min-height: 120px; }
   position: fixed;
   inset: auto var(--chat-right) var(--chat-panel-bottom) auto;
   z-index: 6;
-  width: min(320px, calc(100% - var(--chat-right) - max(var(--chat-margin), env(safe-area-inset-left))));
-  height: min(390px, calc(100dvh - var(--chat-panel-bottom) - max(var(--chat-margin), env(safe-area-inset-top))));
+  width: min(420px, calc(100% - var(--chat-right) - max(var(--chat-margin), env(safe-area-inset-left))));
+  height: min(540px, calc(100dvh - var(--chat-panel-bottom) - max(var(--chat-margin), env(safe-area-inset-top))));
+  max-width: none;
   max-height: none;
   margin: 0;
   overflow: auto;

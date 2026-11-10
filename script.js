@@ -48,23 +48,35 @@ const admissionsAnswers = [
 ];
 const requirementsQuestion = /\b(requirements?|documents?|checklist|kailangan)\b/;
 const enrollmentQuestion = /\b(apply|application|admissions?|enrol{1,2}(?:ment|ing)?|mag[- ]?enroll)\b/;
+const contactReply = "I’m not sure about that. Please use the Contact SBA link below or call (034) 4713 280 so the office can help you.";
 const chatAnswers = [
   [/\b(tuition|fees?|scholarships?|installments?|deadlines?|majors?|qualifying|retention|application status|payment|class schedules?|enrollment (dates?|schedule)|when .*(?:enroll|apply|admissions?))\b/i, "Please call (034) 4713 280 or use the Contact SBA link for the latest information. For application status, contact the Registrar’s Office."],
   [/\b(online)\b/i, "The published enrollment steps direct students to the Registrar’s Office on campus. Call (034) 4713 280 to ask about online options."],
-  [/\b(hours?|open|close|oras)\b/i, "Office hours are Monday to Friday, 8:00 AM to 5:00 PM."],
-  [/\b(contact|phone|call|number|email|address|location|where|saan)\b/i, "Call (034) 4713 280. The campus is at Rizal Street, Don Emilio Village, Kabankalan, Philippines, 6111."],
+  [/^(?:hours?|oras)[\s?!.]*$|\b(?:office hours?|opening hours?|(?:office|sba)\s+(?:open|close)s?|(?:open|close)\s+(?:the\s+)?office)\b/i, "The SBA office is open Monday to Friday, from 8:00 AM to 5:00 PM."],
+  [/^(?:contact|phone|number|email|address|location)[\s?!.]*$|\b(?:contact (?:sba|you|details|number|info(?:rmation)?|the office)|phone number|office (?:phone|number|email|address|location)|campus (?:address|location)|(?:where|saan)\b.*\b(?:campus|office|sba|southland)|(?:call|email) (?:sba|you|the office))\b/i, "You can reach the SBA office at (034) 4713 280. The campus is on Rizal Street, Don Emilio Village, Kabankalan, Philippines, 6111."],
   [/\b(programs?|courses?|degrees?|bsa|bsba|accountancy|business administration|kurso)\b/i, "SBA offers a Bachelor of Science in Accountancy (BSA), which covers accounting, auditing, and taxation, and a Bachelor of Science in Business Administration (BSBA), which covers management, marketing, finance, and entrepreneurship."],
   [requirementsQuestion, "Which student category applies to you? Type new, returning, continuing, transferee, or foreign student to get the right checklist."],
   [enrollmentQuestion, "Prepare the documents for your student category, then visit the Registrar’s Office on campus to submit them and complete the final forms. After processing, you’ll receive your enrollment assessment. Ask me for the requirements for your student category."],
 ];
 
 function getChatReply(question) {
-  const text = question.toLowerCase().replace(/[’']/g, "");
+  const text = question.trim().toLowerCase().replace(/[’']/g, "");
+  const phrase = text.replace(/[?!.]+$/, "").trim();
+  if (/^(?:hi|hey|hello)(?:[ ,]+(?:there|sba|everyone|po))?$|^(?:good (?:morning|afternoon|evening|day)|kumusta|kamusta|mabuhay)(?: po)?$/.test(phrase)) {
+    return "Hi there! I’m the SBA chat assistant. What can I help you with today? You can ask about our programs, admission requirements, or how to enroll.";
+  }
+  if (/^(?:thanks|thank you|salamat)(?: so much| very much| po)?$/.test(phrase)) {
+    return "You’re welcome! Feel free to ask if you have another question about SBA.";
+  }
+  if (/^(?:help|can you help(?: me)?|what can you (?:do|help me with))$/.test(phrase)) {
+    return "Of course! I can help you explore SBA programs, find your admission requirements, or learn how to enroll. What would you like to start with?";
+  }
   // Prefer the specific topic when a question also mentions a student category.
   const topic = chatAnswers.find(([pattern]) => pattern.test(text));
   const admissions = admissionsAnswers.find(([pattern]) => pattern.test(text));
-  if (admissions && (!topic || topic[0] === requirementsQuestion || topic[0] === enrollmentQuestion)) return admissions[1];
-  return topic?.[1] ?? "I can help with SBA programs, admission requirements, enrollment, and office hours. For other questions, use the Contact SBA link or call (034) 4713 280.";
+  const studentCategory = /^(?:im (?:an? )?)?(?:new|returning|incoming|continuing|current|foreign|international|transferee|transfer|freshman|freshmen|first[- ]year)(?: student)?$/;
+  if (admissions && (studentCategory.test(phrase) || topic?.[0] === requirementsQuestion || topic?.[0] === enrollmentQuestion)) return admissions[1];
+  return topic?.[1] ?? contactReply;
 }
 
 function appendChatMessage(speaker, message) {
@@ -81,7 +93,7 @@ function sendChatQuestion(question) {
   appendChatMessage("SBA", getChatReply(question));
 }
 
-appendChatMessage("SBA", "Hi! Ask me about SBA programs, admission requirements, or how to enroll.");
+appendChatMessage("SBA", "Hi, welcome to SBA! What can I help you with today?");
 chatForm.addEventListener("submit", (event) => {
   event.preventDefault();
   sendChatQuestion(chatInput.value);
