@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3200" height="2400" viewBox="258 186 749 560" preserveAspectRatio="none">
+<g id="SLEEVE PHOTO CLIPS" fill="none">
+<rect id="Alignment bounds" x="258" y="186" width="749" height="560"/>
+<path id="Front - left photo clip" d="M345 341 C327 352 320 377 312 402 L299 451 C316 461 339 468 358 466 Q365 465 370 447 C367 428 360 416 354 398 C350 381 347 359 345 341 Z"/>
+<path id="Front - right photo clip" d="M579 341 C595 349 603 374 610 400 L622 452 C605 460 584 468 566 466 Q559 463 558 446 C562 427 569 415 573 396 C577 376 579 356 579 341 Z"/>
+<path id="Back - left photo clip" d="M691 339 C673 350 665 374 657 400 L643 451 C661 460 682 468 698 466 Q704 463 705 446 C702 426 696 411 693 394 C690 375 689 354 691 339 Z"/>
+<path id="Back - right photo clip" d="M916 339 C934 348 942 371 950 398 L966 452 C948 461 926 468 907 466 Q900 464 894 446 C899 428 906 411 910 393 C914 374 916 354 916 339 Z"/>
+</g>
+</svg>
