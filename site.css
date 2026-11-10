@@ -23,6 +23,15 @@ html { scroll-padding-top: 5rem; }
 body { margin: 0; }
 .phone-design { display: none; }
 .desktop-design, .home-footer { max-width: var(--page-max); margin-inline: auto; }
+.desktop-design:has(> main > [data-name$=" / Hero"]) { max-width: none; }
+.desktop-design > footer,
+.desktop-design:has(> main > [data-name$=" / Hero"]) > main > :not([data-name$=" / Hero"], [data-name="About Us / Faculty and Staff"], [data-name="Academic Programs / Why Choose SBA"]) {
+  max-width: var(--page-max);
+  margin-inline: auto;
+}
+.desktop-design > main > :is([data-name$=" / Hero"], [data-name="About Us / Faculty and Staff"], [data-name="Academic Programs / Why Choose SBA"]) {
+  padding-inline: calc(var(--space-80, 80px) + max(0px, (100% - var(--page-max)) / 2));
+}
 :focus-visible { outline: 3px solid #377de8; outline-offset: 4px; }
 a:hover { text-decoration: underline; }
 a:is(.home-button, .program-cta):hover { text-decoration: none; }
