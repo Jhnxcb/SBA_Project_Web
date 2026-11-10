@@ -142,6 +142,10 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
 }
 .home-hero[data-extra-photo] .hero-photo img { object-position: center; }
 .hero-carousel-controls {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 1.5rem;
+  clip-path: inset(50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,6 +156,9 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
   background: var(--sba-color-brand);
   color: white;
 }
+.hero-carousel-controls:focus-within { clip-path: none; }
+.home-hero[data-carousel] :is(.hero-artwork, .hero-photo) { touch-action: pan-y pinch-zoom; cursor: grab; }
+.home-hero[data-carousel] :is(.hero-artwork, .hero-photo):active { cursor: grabbing; }
 .hero-carousel-controls button {
   display: grid;
   place-items: center;
@@ -234,7 +241,6 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
   .hero-photo { grid-area: photo; }
   .hero-copy { grid-area: copy; align-self: end; }
   .hero-actions { grid-area: actions; align-self: start; justify-content: start; }
-  .hero-carousel-controls { grid-column: 1 / -1; }
 }
 @media (min-width: 64rem) {
   .home-hero { background: white; }
@@ -251,7 +257,7 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
     background: linear-gradient(to bottom, transparent 78%, #00153280);
   }
   .hero-layout { position: absolute; inset-inline: 0; bottom: 12.35%; padding: 0; }
-  .hero-carousel-controls { position: absolute; top: calc(100% + 0.75rem); }
+  .hero-carousel-controls { inset-block-start: calc(100% + 0.75rem); }
   .hero-actions { transform: translateY(var(--hero-actions-offset, 0px)); }
   .hero-actions .home-button.inverse { border-color: var(--sba-color-brand); }
   .hero-actions .home-button.outline { background: var(--sba-color-brand); }

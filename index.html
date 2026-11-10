@@ -41,11 +41,11 @@
   <main id="main-content" tabindex="-1">
     <section class="home-hero">
       <div class="hero-artwork">
-        <img src="assets/416ff.png" width="1920" height="1080" alt="Southland College business and accountancy students" fetchpriority="high">
+        <img src="assets/416ff.png" width="1920" height="1080" alt="Southland College business and accountancy students" fetchpriority="high" draggable="false">
       </div>
       <div class="home-wrap hero-layout">
         <figure class="hero-photo">
-          <img src="assets/416ff.png" width="1920" height="1080" alt="Southland College business and accountancy students">
+          <img src="assets/416ff.png" width="1920" height="1080" alt="Southland College business and accountancy students" draggable="false">
         </figure>
         <div class="hero-carousel-controls" role="group" aria-label="Hero photos" hidden>
           <button type="button" data-hero-step="-1" aria-label="Previous photo">
@@ -53,7 +53,8 @@
               <path d="m15 5-7 7 7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <span data-hero-status role="status"></span>
+          <span class="sr-only" data-hero-status role="status"></span>
+          <button type="button" data-hero-playback>Pause slideshow</button>
           <button type="button" data-hero-step="1" aria-label="Next photo">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="m9 5 7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
