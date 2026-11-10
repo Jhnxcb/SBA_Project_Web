@@ -43,7 +43,10 @@ module.exports = async function inquiry(req, res) {
     });
     if (!response.ok) return res.status(502).json({ ok: false });
     const result = await response.json();
-    if (result.ok === true) return res.status(200).json({ ok: true, confirmationSent: result.confirmationSent === true });
+    if (result.ok === true) {
+      const ticket = typeof result.ticket === "string" && /^SBA-\d{9}$/.test(result.ticket) ? result.ticket : undefined;
+      return res.status(200).json({ ok: true, confirmationSent: result.confirmationSent === true, ticket });
+    }
     if (result.code === "rate_limit") return res.status(429).json({ ok: false, code: "rate_limit" });
     return res.status(503).json({ ok: false, code: "unavailable" });
   } catch {

@@ -356,9 +356,9 @@ for (const form of document.querySelectorAll("[data-inquiry-form]")) {
       }
       form.reset();
       previousPayload = "";
-      status.textContent = result?.confirmationSent
-        ? "Your inquiry was received. A confirmation email was sent."
-        : "Your inquiry was received.";
+      const ticket = result?.ticket ? ` Your ticket number is ${result.ticket}.` : "";
+      const confirmation = result?.confirmationSent ? " A confirmation email was sent." : "";
+      status.textContent = `Your inquiry was received.${ticket}${confirmation}`;
     } catch {
       status.textContent = "Your inquiry could not be sent. Please try again.";
     } finally {

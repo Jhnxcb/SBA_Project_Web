@@ -31,4 +31,6 @@ The homepage embeds the introduction from YouTube. The chatbot runs in the brows
 
 The sheet records an inquiry before attempting the confirmation. If the email cannot be sent, the inquiry stays in the sheet and the confirmation status shows the outcome. Apps Script sends the confirmation from the account that deploys the web app.
 
+For an existing deployment, replace the Apps Script code, run `setupInquiries` to add the **Ticket number** column, then edit the existing web app deployment and select **New version** to keep the same `/exec` URL. New inquiries receive a random ticket number in the sheet, on the Contact page, and in the HTML confirmation email.
+
 For hosting, upload the HTML, CSS, JavaScript, and `assets/` directory together, keeping their paths intact. No build step is required.
