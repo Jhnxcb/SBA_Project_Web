@@ -243,97 +243,110 @@ if (heroArtwork) {
 
   if (photos.length > 1) {
     const status = carouselControls.querySelector("[data-hero-status]");
-    const playback = carouselControls.querySelector("[data-hero-playback]");
     let currentPhoto = 0;
-    let timer;
-    let paused = false;
-    let hovering = false;
-    let focused = false;
-    let drag;
+    let settling = false;
 
-    function showPhoto(step, announce = false) {
-      currentPhoto = (currentPhoto + step + photos.length) % photos.length;
+    function photoIndex(step) {
+      return (currentPhoto + step + photos.length) % photos.length;
+    }
+
+    function showPhoto(step) {
+      currentPhoto = photoIndex(step);
       const { src, alt } = photos[currentPhoto];
       hero.toggleAttribute("data-extra-photo", currentPhoto !== 0);
       for (const image of [desktopPhoto, mobilePhoto]) {
         image.alt = alt;
         image.src = src;
       }
-      if (announce) status.textContent = `Photo ${currentPhoto + 1} of ${photos.length}. ${alt}`;
-    }
-
-    function scheduleSlide() {
-      clearTimeout(timer);
-      if (!pageMotion.matches || paused || hovering || focused || drag || document.hidden) return;
-      timer = setTimeout(() => {
-        showPhoto(1);
-        scheduleSlide();
-      }, 6000);
-    }
-
-    function changeSlide(step) {
-      showPhoto(step, true);
-      scheduleSlide();
+      status.textContent = `Photo ${currentPhoto + 1} of ${photos.length}. ${alt}`;
     }
 
     for (const button of carouselControls.querySelectorAll("[data-hero-step]")) {
-      button.addEventListener("click", () => changeSlide(Number(button.dataset.heroStep)));
+      button.addEventListener("click", () => {
+        if (!settling) showPhoto(Number(button.dataset.heroStep));
+      });
     }
 
-    for (const surface of [heroArtwork, mobilePhoto.parentElement]) {
+    for (const image of [desktopPhoto, mobilePhoto]) {
+      const surface = image.parentElement;
+      const preview = document.createElement("img");
+      preview.className = "hero-slide-preview";
+      preview.alt = "";
+      preview.setAttribute("aria-hidden", "true");
+      preview.hidden = true;
+      surface.append(preview);
+      let drag;
+
+      function movePhotos(offset, direction, width) {
+        image.style.translate = `${offset}px 0`;
+        preview.style.translate = `${offset + direction * width}px 0`;
+      }
+
       surface.addEventListener("pointerdown", (event) => {
-        if (!event.isPrimary || event.button !== 0) return;
-        drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
+        if (settling || !event.isPrimary || event.button !== 0) return;
+        drag = { id: event.pointerId, x: event.clientX, y: event.clientY, offset: 0, direction: 0 };
         surface.setPointerCapture(event.pointerId);
-        scheduleSlide();
       });
-      surface.addEventListener("pointerup", (event) => {
+
+      surface.addEventListener("pointermove", (event) => {
         if (drag?.id !== event.pointerId) return;
         const dx = event.clientX - drag.x;
         const dy = event.clientY - drag.y;
-        drag = undefined;
-        if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy)) changeSlide(dx < 0 ? 1 : -1);
-        else scheduleSlide();
+        if (!drag.direction) {
+          if (Math.max(Math.abs(dx), Math.abs(dy)) < 8) return;
+          if (Math.abs(dy) >= Math.abs(dx)) {
+            drag = undefined;
+            return;
+          }
+        }
+        const width = surface.clientWidth;
+        const direction = dx <= 0 ? 1 : -1;
+        if (drag.direction !== direction) {
+          const index = photoIndex(direction);
+          preview.src = photos[index].src;
+          preview.toggleAttribute("data-original", index === 0);
+          preview.hidden = false;
+        }
+        drag.direction = direction;
+        drag.offset = Math.max(-width, Math.min(width, dx));
+        movePhotos(drag.offset, direction, width);
       });
-      surface.addEventListener("lostpointercapture", (event) => {
+
+      async function finishSwipe(event) {
         if (drag?.id !== event.pointerId) return;
+        const { offset, direction } = drag;
         drag = undefined;
-        scheduleSlide();
-      });
+        if (!direction) return;
+
+        const width = surface.clientWidth;
+        const advance = event.type === "pointerup" && Math.abs(offset) >= Math.min(80, width * 0.2);
+        const end = advance ? -direction * width : 0;
+        settling = true;
+        if (pageMotion.matches) {
+          const distance = end - offset;
+          const animations = [image, preview].map((slide) => {
+            const start = parseFloat(slide.style.translate);
+            return slide.animate(
+              [{ translate: `${start}px 0` }, { translate: `${start + distance}px 0` }],
+              { duration: 180, easing: "ease-out", fill: "forwards" },
+            );
+          });
+          await Promise.allSettled(animations.map((animation) => animation.finished));
+          animations.forEach((animation) => animation.cancel());
+        }
+        if (advance) showPhoto(direction);
+        preview.hidden = true;
+        preview.style.removeProperty("translate");
+        image.style.removeProperty("translate");
+        settling = false;
+      }
+
+      surface.addEventListener("pointerup", finishSwipe);
+      surface.addEventListener("lostpointercapture", finishSwipe);
     }
 
-    hero.addEventListener("pointerenter", (event) => {
-      if (event.pointerType !== "mouse") return;
-      hovering = true;
-      scheduleSlide();
-    });
-    hero.addEventListener("pointerleave", (event) => {
-      if (event.pointerType !== "mouse") return;
-      hovering = false;
-      scheduleSlide();
-    });
-    hero.addEventListener("focusin", () => {
-      focused = true;
-      scheduleSlide();
-    });
-    hero.addEventListener("focusout", (event) => {
-      focused = hero.contains(event.relatedTarget);
-      scheduleSlide();
-    });
-    playback.addEventListener("click", () => {
-      paused = !paused;
-      playback.textContent = paused ? "Play slideshow" : "Pause slideshow";
-      scheduleSlide();
-    });
-    function updateSlideMotion() {
-      playback.hidden = !pageMotion.matches;
-      scheduleSlide();
-    }
-    pageMotion.addEventListener("change", updateSlideMotion);
-    document.addEventListener("visibilitychange", scheduleSlide);
     hero.setAttribute("data-carousel", "");
     carouselControls.hidden = false;
-    updateSlideMotion();
   }
 
   const animatedHero = matchMedia("(min-width: 64rem) and (prefers-reduced-motion: no-preference)");

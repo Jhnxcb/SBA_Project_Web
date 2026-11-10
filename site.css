@@ -140,7 +140,8 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
   object-fit: cover;
   object-position: right center;
 }
-.home-hero[data-extra-photo] .hero-photo img { object-position: center; }
+.home-hero[data-extra-photo] .hero-photo img:not(.hero-slide-preview),
+.hero-photo .hero-slide-preview:not([data-original]) { object-position: center; }
 .hero-carousel-controls {
   position: absolute;
   z-index: 1;
@@ -159,6 +160,7 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
 .hero-carousel-controls:focus-within { clip-path: none; }
 .home-hero[data-carousel] :is(.hero-artwork, .hero-photo) { touch-action: pan-y pinch-zoom; cursor: grab; }
 .home-hero[data-carousel] :is(.hero-artwork, .hero-photo):active { cursor: grabbing; }
+.hero-slide-preview { pointer-events: none; }
 .hero-carousel-controls button {
   display: grid;
   place-items: center;
@@ -244,8 +246,9 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
 }
 @media (min-width: 64rem) {
   .home-hero { background: white; }
-  .hero-artwork { display: block; position: relative; }
+  .hero-artwork { display: block; position: relative; overflow: hidden; }
   .hero-artwork img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+  .hero-artwork .hero-slide-preview { position: absolute; inset: 0; height: 100%; }
   .hero-artwork::after {
     content: "";
     position: absolute;
