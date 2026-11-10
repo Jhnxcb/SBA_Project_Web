@@ -22,7 +22,7 @@
 html { scroll-padding-top: 5rem; }
 body { margin: 0; }
 .phone-design { display: none; }
-.desktop-design, .home-announcements, .home-footer { max-width: var(--page-max); margin-inline: auto; }
+.desktop-design, .home-footer { max-width: var(--page-max); margin-inline: auto; }
 :focus-visible { outline: 3px solid #377de8; outline-offset: 4px; }
 a:hover { text-decoration: underline; }
 a:is(.home-button, .program-cta):hover { text-decoration: none; }
@@ -122,7 +122,7 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
 .hero-artwork { display: none; }
 .hero-artwork img, .hero-photo img { opacity: var(--hero-photo-opacity, 1); }
 .hero-layout { display: grid; gap: 1.25rem; padding-block: 1.5rem; }
-.hero-photo { position: relative; overflow: hidden; aspect-ratio: 342 / 280; max-width: 38rem; border-radius: 1rem; }
+.hero-photo { position: relative; overflow: hidden; aspect-ratio: 342 / 280; border-radius: 1rem; }
 .hero-photo img {
   position: absolute;
   inset: 0;
@@ -167,6 +167,7 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
   background: var(--sba-color-brand);
   color: white;
   font-weight: 600;
+  text-align: center;
 }
 .home-button.inverse { background: white; color: var(--sba-color-brand); }
 .home-button.outline { background: transparent; color: white; border-color: white; }
@@ -218,6 +219,19 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
 @media (min-width: 50rem) {
   .home-intro { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); }
   .footer-layout { grid-template-columns: minmax(0, 1fr) repeat(2, minmax(0, 1.4fr)); }
+}
+@media (42rem <= width < 64rem) {
+  .hero-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: "photo copy" "photo actions";
+    align-items: center;
+    column-gap: clamp(1.5rem, 4vw, 3rem);
+    padding-block: 2rem;
+  }
+  .hero-photo { grid-area: photo; }
+  .hero-copy { grid-area: copy; align-self: end; }
+  .hero-actions { grid-area: actions; align-self: start; justify-content: start; }
+  .hero-carousel-controls { grid-column: 1 / -1; }
 }
 @media (min-width: 64rem) {
   .home-hero { background: white; }
@@ -323,5 +337,25 @@ textarea.site-input { resize: vertical; min-height: 120px; }
   .desktop-design { display: none; }
   .phone-design { display: block; }
   .phone-design [data-name="Main Content"] { overflow-wrap: anywhere; }
+  .phone-design [data-name="Footer / Phone"] [data-name^="Social / "] > div { min-width: 0; flex-shrink: 1; }
+  .phone-design [data-name="Footer / Phone"] [data-name^="Social / "] p { white-space: normal; overflow-wrap: anywhere; }
   #chat-launcher, #chat-panel { --chat-margin: 16px; --chat-launcher-size: 56px; }
+}
+
+@media (42rem <= width < 64rem) {
+  .phone-design :is(
+    [data-name="Mission and Vision / Two Columns"],
+    [data-name="Program Grid / Two Columns"],
+    [data-name="Contact / Two Columns"],
+    [data-name="Row / Name and Email"],
+    [data-name="Row / Phone and Topic"],
+    [data-name="Requirement Grid / 2 × 2"] > [data-name^="Row / "],
+    [data-name="News / Article Grid"] > [data-name^="Row / "],
+    [data-name="Footer / Phone"]
+  ) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .phone-design [data-name="Footer / Phone"] > [data-name="Logo / Department"] { grid-column: 1 / -1; }
 }
