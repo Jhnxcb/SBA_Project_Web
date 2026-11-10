@@ -256,9 +256,6 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
     pointer-events: none;
     background: linear-gradient(to bottom, transparent var(--hero-fade-start, 64.4%), white);
   }
-  .home-hero[data-extra-photo] .hero-artwork::after {
-    background: linear-gradient(to bottom, transparent 78%, #00153280);
-  }
   .hero-layout { position: absolute; inset-inline: 0; bottom: 12.35%; padding: 0; }
   .hero-carousel-controls { inset-block-start: calc(100% + 0.75rem); }
   .hero-actions { transform: translateY(var(--hero-actions-offset, 0px)); }
