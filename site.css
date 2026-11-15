@@ -247,7 +247,7 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
 @media (min-width: 64rem) {
   .home-hero { background: white; }
   .hero-artwork { display: block; position: relative; overflow: hidden; }
-  .hero-artwork img { display: block; width: 100%; height: auto; aspect-ratio: 12 / 5; object-fit: cover; }
+  .hero-artwork img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
   .hero-artwork .hero-slide-preview { position: absolute; inset: 0; height: 100%; }
   .hero-artwork::after {
     content: "";
@@ -256,13 +256,12 @@ a:is([data-name="News / Featured Article"], [data-name="News / Article Card"]):h
     pointer-events: none;
     background: linear-gradient(to bottom, transparent var(--hero-fade-start, 64.4%), white);
   }
-  .hero-layout { position: absolute; inset: 0; align-content: center; padding-block: 0; pointer-events: none; }
-  .hero-carousel-controls { inset-block-start: auto; inset-block-end: 1rem; pointer-events: auto; }
+  .hero-layout { position: absolute; inset-inline: 0; bottom: 12.35%; padding: 0; }
+  .hero-carousel-controls { inset-block-start: calc(100% + 0.75rem); }
   .hero-actions { transform: translateY(var(--hero-actions-offset, 0px)); }
-  .hero-actions a { pointer-events: auto; }
   .hero-actions .home-button.inverse { border-color: var(--sba-color-brand); }
   .hero-actions .home-button.outline { background: var(--sba-color-brand); }
-  .hero-copy { max-width: 30rem; text-shadow: 0 1px 4px rgb(0 0 0 / 70%); }
+  .hero-copy { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .hero-photo { display: none; }
   .announcements-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
